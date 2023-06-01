@@ -1,13 +1,13 @@
-import * as React from 'react';
-import {ListItem, Teams as TeamsList} from 'types';
-import {getTeams as fetchTeams} from '../api';
-import Header from '../components/Header';
-import List from '../components/List';
-import {Container} from '../components/GlobalComponents';
+import {ListItem, Team} from 'types';
+import {useFetchTeamsQuery} from 'state/slices/team';
+import {useAppDispatch} from 'state/hooks';
+import {setHeader} from 'state/slices/header';
+import List from 'components/List';
+import {Container} from 'components/GlobalComponents';
 
-var MapT = (teams: TeamsList[]) => {
+const MapT = (teams: Team[]) => {
     return teams.map(team => {
-        var columns = [
+        const columns = [
             {
                 key: 'Name',
                 value: team.name,
@@ -23,22 +23,15 @@ var MapT = (teams: TeamsList[]) => {
 };
 
 const Teams = () => {
-    const [teams, setTeams] = React.useState<any>([]);
-    const [isLoading, setIsLoading] = React.useState<any>(true);
+    const dispatch = useAppDispatch();
 
-    React.useEffect(() => {
-        const getTeams = async () => {
-            const response = await fetchTeams();
-            setTeams(response);
-            setIsLoading(false);
-        };
-        getTeams();
-    }, []);
+    dispatch(setHeader({title: 'Teams', showBackButton: false}));
+
+    const {data: teams = [], isFetching} = useFetchTeamsQuery();
 
     return (
         <Container>
-            <Header title="Teams" showBackButton={false} />
-            <List items={MapT(teams)} isLoading={isLoading} />
+            <List items={MapT(teams)} isLoading={isFetching} />
         </Container>
     );
 };

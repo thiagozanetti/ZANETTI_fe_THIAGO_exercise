@@ -1,14 +1,14 @@
 {
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
-    },
     "ecmaVersion": "latest",
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
-  "extends": ["airbnb", "prettier"],
+  "extends": [
+    "airbnb",
+    "prettier"
+  ],
   "overrides": [
     {
       "files": ["**/*.ts", "**/*.tsx"],
@@ -20,11 +20,12 @@
       "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended"
+        "plugin:@typescript-eslint/recommended",
+        "plugin:react/jsx-runtime"
       ],
       "plugins": ["@typescript-eslint"],
       "rules": {
-        "no-var": "off",
+        "no-var": "error",
         "no-unsafe-optional-chaining": 0,
         "react/jsx-no-useless-fragment": [2, {"allowExpressions": true}],
         "@typescript-eslint/no-explicit-any": 0,

@@ -1,15 +1,15 @@
-import * as React from 'react';
 import {useLocation, useParams} from 'react-router-dom';
 import {ListItem, UserData} from 'types';
-import {getTeamOverview, getUserData} from '../api';
-import Card from '../components/Card';
-import {Container} from '../components/GlobalComponents';
-import Header from '../components/Header';
-import List from '../components/List';
+import {useAppDispatch} from 'state/hooks';
+import {setHeader} from 'state/slices/header';
+import {useFetchTeamOverviewExQuery} from 'state/slices/team';
+import Card from 'components/Card';
+import {Container} from 'components/GlobalComponents';
+import List from 'components/List';
 
-var mapArray = (users: UserData[]) => {
+const mapArray = (users: UserData[]) => {
     return users.map(u => {
-        var columns = [
+        const columns = [
             {
                 key: 'Name',
                 value: `${u.firstName} ${u.lastName}`,
@@ -32,8 +32,8 @@ var mapArray = (users: UserData[]) => {
     }) as ListItem[];
 };
 
-var mapTLead = tlead => {
-    var columns = [
+const mapTLead = tlead => {
+    const columns = [
         {
             key: 'Team Lead',
             value: '',
@@ -54,41 +54,20 @@ var mapTLead = tlead => {
     return <Card columns={columns} url={`/user/${tlead.id}`} navigationProps={tlead} />;
 };
 
-interface PageState {
-    teamLead?: UserData;
-    teamMembers?: UserData[];
-}
-
 const TeamOverview = () => {
-    const location = useLocation();
+    const {state: {name}} = useLocation();
     const {teamId} = useParams();
-    const [pageData, setPageData] = React.useState<PageState>({});
-    const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
-    React.useEffect(() => {
-        var getTeamUsers = async () => {
-            const {teamLeadId, teamMemberIds = []} = await getTeamOverview(teamId);
-            const teamLead = await getUserData(teamLeadId);
+    const dispatch = useAppDispatch();
 
-            const teamMembers = [];
-            for(var teamMemberId of teamMemberIds) {
-                const data = await getUserData(teamMemberId);
-                teamMembers.push(data);
-            }
-            setPageData({
-                teamLead,
-                teamMembers,
-            });
-            setIsLoading(false);
-        };
-        getTeamUsers();
-    }, [teamId]);
+    dispatch(setHeader({title: `Team ${name}`, showBackButton: true}));
+
+    const {data: {teamLead, teamMembers = []} = {}, isFetching} = useFetchTeamOverviewExQuery(teamId);
 
     return (
         <Container>
-            <Header title={`Team ${location.state.name}`} />
-            {!isLoading && mapTLead(pageData.teamLead)}
-            <List items={mapArray(pageData?.teamMembers ?? [])} isLoading={isLoading} />
+            {!isFetching && mapTLead(teamLead)}
+            <List items={mapArray(teamMembers)} isLoading={isFetching} />
         </Container>
     );
 };
