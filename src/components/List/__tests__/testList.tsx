@@ -1,13 +1,15 @@
-import {render, screen} from '@testing-library/react';
+import {screen} from '@testing-library/react';
+import {renderWithProviders as render} from 'utils/test';
 import List from '..';
 
 jest.mock('react-router-dom', () => ({
-    ...(jest.requireActual('react-router-dom') as any),
+    ...(jest.requireActual('react-router-dom')),
     useNavigate: () => jest.fn(),
 }));
 
 describe('List', () => {
     it('should render spinner and not render items when it is loading', () => {
+        // given
         const items = [
             {
                 id: '1',
@@ -19,13 +21,17 @@ describe('List', () => {
                 ],
             },
         ];
+
+        // when
         render(<List isLoading items={items} />);
 
+        // then
         expect(screen.getByTestId('spinner')).toBeInTheDocument();
         expect(screen.queryByTestId('cardContainer')).not.toBeInTheDocument();
     });
 
     it('should not render spinner and render items when it is not loading', () => {
+        // given
         const items = [
             {
                 id: '1',
@@ -37,13 +43,17 @@ describe('List', () => {
                 ],
             },
         ];
+
+        // when
         render(<List isLoading={false} items={items} />);
 
+        // then
         expect(screen.queryByTestId('spinner')).not.toBeInTheDocument();
         expect(screen.getByTestId('cardContainer-1')).toBeInTheDocument();
     });
 
     it('should render multiple card when multiple items', () => {
+        // given
         const items = [
             {
                 id: '1',
@@ -64,8 +74,11 @@ describe('List', () => {
                 ],
             },
         ];
+
+        // when
         render(<List isLoading={false} items={items} />);
 
+        // then
         expect(screen.getByTestId('cardContainer-1')).toBeInTheDocument();
         expect(screen.getByTestId('cardContainer-2')).toBeInTheDocument();
     });

@@ -1,5 +1,7 @@
-import {render, screen, waitFor} from '@testing-library/react';
-import * as API from '../../api';
+import {screen, waitFor} from '@testing-library/react';
+import {renderWithProviders as render} from 'utils/test';
+import * as API from 'state/slices/team';
+import {TeamOverviewEx} from 'types';
 import TeamOverview from '../TeamOverview';
 
 jest.mock('react-router-dom', () => ({
@@ -28,24 +30,50 @@ describe('TeamOverview', () => {
     });
 
     it('should render team overview users', async () => {
-        const teamOverview = {
-            id: '1',
-            teamLeadId: '2',
-            teamMemberIds: ['3', '4', '5'],
+        // given
+        const teamOverviewEx: TeamOverviewEx = {
+            teamLead: {
+                id: '2',
+                firstName: 'userData',
+                lastName: 'userData',
+                displayName: 'userData',
+                location: '',
+                avatar: '',
+            },
+            teamMembers: [
+                {
+                    id: '2',
+                    firstName: 'userData',
+                    lastName: 'userData',
+                    displayName: 'userData',
+                    location: '',
+                    avatar: '',
+                },
+                {
+                    id: '2',
+                    firstName: 'userData',
+                    lastName: 'userData',
+                    displayName: 'userData',
+                    location: '',
+                    avatar: '',
+                },
+                {
+                    id: '2',
+                    firstName: 'userData',
+                    lastName: 'userData',
+                    displayName: 'userData',
+                    location: '',
+                    avatar: '',
+                },
+            ],
         };
-        const userData = {
-            id: '2',
-            firstName: 'userData',
-            lastName: 'userData',
-            displayName: 'userData',
-            location: '',
-            avatar: '',
-        };
-        jest.spyOn(API, 'getTeamOverview').mockImplementationOnce(() => Promise.resolve(teamOverview));
-        jest.spyOn(API, 'getUserData').mockImplementationOnce(() => Promise.resolve(userData));
 
+        jest.spyOn(API, 'useFetchTeamOverviewExQuery').mockImplementationOnce(() => ({error: null, data: teamOverviewEx, refetch: null}));
+
+        // when
         render(<TeamOverview />);
 
+        // then
         await waitFor(() => {
             expect(screen.queryAllByText('userData')).toHaveLength(4);
         });

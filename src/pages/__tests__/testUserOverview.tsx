@@ -1,4 +1,6 @@
-import {render, screen} from '@testing-library/react';
+import {screen} from '@testing-library/react';
+import {renderWithProviders as render} from 'utils/test';
+
 import UserOverview from '../UserOverview';
 
 jest.mock('react-router-dom', () => ({
@@ -15,8 +17,12 @@ jest.mock('react-router-dom', () => ({
 
 describe('UserOverview', () => {
     it('should render UserOverview', () => {
+        // given
+
+        // when
         render(<UserOverview />);
 
+        // then
         expect(screen.getByText('Test User')).toBeInTheDocument();
         expect(screen.getByText('userName')).toBeInTheDocument();
         expect(screen.getByText('location')).toBeInTheDocument();

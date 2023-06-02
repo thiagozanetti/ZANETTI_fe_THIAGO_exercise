@@ -1,4 +1,7 @@
-import {fireEvent, render, screen} from '@testing-library/react';
+import {fireEvent, screen} from '@testing-library/react';
+import {renderWithProviders} from 'utils/test';
+import {setHeader} from 'state/slices/header';
+import {AppStore, setupStore} from 'state/store';
 import Header from '..';
 
 const mockUseNavigate = jest.fn();
@@ -9,6 +12,9 @@ jest.mock('react-router-dom', () => ({
 }));
 
 describe('Header', () => {
+    const store: AppStore = setupStore();
+    const render = (element: JSX.Element) => renderWithProviders(element, {store});
+
     beforeAll(() => {
         jest.useFakeTimers();
     });
@@ -22,28 +28,48 @@ describe('Header', () => {
     });
 
     it('should render header', () => {
-        render(<Header title="Header" />);
+        // given
+        store.dispatch(setHeader({title: 'Header', showBackButton: false}));
 
+        // when
+        render(<Header/>);
+
+        // then
         expect(screen.getByText('Header')).toBeInTheDocument();
     });
 
     it('should render back button in header', () => {
-        render(<Header title="Header" showBackButton />);
+        // given
+        store.dispatch(setHeader({title: 'Header', showBackButton: true}));
 
+        // when
+        render(<Header/>);
+
+        // then
         expect(screen.getByRole('button')).toBeInTheDocument();
     });
 
     it('should not render back button in header', () => {
-        render(<Header title="Header" showBackButton={false} />);
+        // given
+        store.dispatch(setHeader({title: 'Header', showBackButton: false}));
 
+        // when
+        render(<Header/>);
+
+        // then
         expect(screen.queryByRole('button')).not.toBeInTheDocument();
     });
 
     it('should navigate back when back button is clicked', () => {
-        render(<Header title="Header" showBackButton />);
+        // given
+        store.dispatch(setHeader({title: 'Header', showBackButton: true}));
 
+        // when
+        render(<Header/>);
         fireEvent.click(screen.getByRole('button'));
 
+        // then
+        expect(screen.getByRole('button')).toBeInTheDocument();
         expect(mockUseNavigate).toHaveBeenCalled();
     });
 });
