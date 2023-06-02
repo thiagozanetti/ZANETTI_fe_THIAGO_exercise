@@ -4,6 +4,7 @@ import {useAppDispatch} from 'state/hooks';
 import {setHeader} from 'state/slices/header';
 import List from 'components/List';
 import {Container} from 'components/GlobalComponents';
+import {useEffect} from 'react';
 
 const MapT = (teams: Team[]) => {
     return teams.map(team => {
@@ -23,11 +24,13 @@ const MapT = (teams: Team[]) => {
 };
 
 const Teams = () => {
+    const {data: teams = [], isFetching} = useFetchTeamsQuery();
+
     const dispatch = useAppDispatch();
 
-    dispatch(setHeader({title: 'Teams', showBackButton: false}));
-
-    const {data: teams = [], isFetching} = useFetchTeamsQuery();
+    useEffect(() => {
+        dispatch(setHeader({title: 'Teams', showBackButton: false}));
+    });
 
     return (
         <Container>

@@ -6,6 +6,7 @@ import {useFetchTeamOverviewExQuery} from 'state/slices/team';
 import Card from 'components/Card';
 import {Container} from 'components/GlobalComponents';
 import List from 'components/List';
+import {useEffect} from 'react';
 
 const mapArray = (users: UserData[]) => {
     return users.map(u => {
@@ -58,11 +59,14 @@ const TeamOverview = () => {
     const {state: {name}} = useLocation();
     const {teamId} = useParams();
 
+    const {data: {teamLead, teamMembers = []} = {}, isFetching} = useFetchTeamOverviewExQuery(teamId);
+
     const dispatch = useAppDispatch();
 
-    dispatch(setHeader({title: `Team ${name}`, showBackButton: true}));
+    useEffect(() => {
+        dispatch(setHeader({title: `Team ${name}`, showBackButton: true}));
+    });
 
-    const {data: {teamLead, teamMembers = []} = {}, isFetching} = useFetchTeamOverviewExQuery(teamId);
 
     return (
         <Container>
