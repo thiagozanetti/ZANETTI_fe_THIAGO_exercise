@@ -7,13 +7,13 @@ interface Props {
 export const Container = styled.div<Props>`
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     border: 1px solid black;
     background: #ddd;
     padding: 20px;
     width: 250px;
-    max-height: 200px;
+    height: 40px;
     cursor: ${(props: Props) => (props.hasNavigation ? 'pointer' : 'default')};
     margin: 5px;
 `;

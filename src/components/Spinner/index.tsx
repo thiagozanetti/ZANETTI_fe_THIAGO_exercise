@@ -1,7 +1,7 @@
 import styled, {keyframes} from 'styled-components';
 
 const spinnerAnimation = keyframes`
-from {
+    from {
         transform: rotate(0deg);
     }
     to {
@@ -10,14 +10,12 @@ from {
 `;
 
 const SpinnerBody = styled.div`
-    height: 4rem;
-    width: 4rem;
+    height: 2rem;
+    width: 2rem;
     border: 4px solid #d1d5db;
     border-top-color: #3b82f6;
     border-radius: 50%;
     animation: ${spinnerAnimation} 800ms linear infinite;
 `;
 
-export const Spinner = () => {
-    return <SpinnerBody data-testid="spinner" />;
-};
+export const Spinner = () => <SpinnerBody data-testid="spinner" />;

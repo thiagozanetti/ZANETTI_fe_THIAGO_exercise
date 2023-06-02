@@ -26,12 +26,11 @@ const Card = ({
         <Container
             data-testid={`cardContainer-${id}`}
             hasNavigation={hasNavigation}
-            onClick={(e: Event) => {
+            onClick={(e) => {
                 if (hasNavigation) {
-                    navigate(url, {
-                        state: navigationProps,
-                    });
+                    navigate(url, {state: navigationProps});
                 }
+
                 e.preventDefault();
             }}
         >
